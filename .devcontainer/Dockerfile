@@ -1,0 +1,16 @@
+# Use an official Python runtime as a parent image
+FROM mcr.microsoft.com/devcontainers/python:3.11-bullseye
+
+# Install PyTorch and MLflow
+RUN pip install --no-cache streamlit==1.32.0
+
+USER vscode
+
+RUN mkdir -p ~/miniconda3 && \
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py311_24.1.2-0-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && \
+    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && \
+    rm -rf ~/miniconda3/miniconda.sh && \
+    ~/miniconda3/bin/conda init bash
+
+# Fix issue #1 for non-login shells
+RUN    echo 'export PATH="/usr/local/python/current/bin:/usr/local/py-utils/bin:/usr/local/share/nvm/current/bin:/usr/local/bin:$PATH"' >> ~/.bashrc
